@@ -19,8 +19,8 @@ export default function CastList({ cast }: CastListProps) {
       {displayedCast.map((member) => {
         const photoUrl = getImageUrl(member.profile_path, "w200");
         return (
-          <div key={member.id} className="w-28 flex-shrink-0 text-center">
-            <div className="relative mx-auto mb-2 aspect-square w-24 overflow-hidden rounded-full bg-surfaceLight">
+          <div key={member.id} className="w-24 flex-shrink-0">
+            <div className="relative mb-2 aspect-square w-24 overflow-hidden rounded-lg bg-surfaceLight">
               {photoUrl ? (
                 <Image src={photoUrl} alt={member.name} fill className="object-cover" />
               ) : (
@@ -29,8 +29,7 @@ export default function CastList({ cast }: CastListProps) {
                 </div>
               )}
             </div>
-            <p className="line-clamp-1 text-sm font-medium text-white">{member.name}</p>
-            <p className="line-clamp-1 text-xs text-muted">{member.character}</p>
+            <p className="line-clamp-2 text-sm font-medium text-white">{member.name}</p>
           </div>
         );
       })}

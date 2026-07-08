@@ -71,7 +71,7 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         {/* Poster + info */}
         <div className="-mt-32 flex flex-col gap-6 sm:-mt-40 sm:flex-row sm:items-end">
-          <div className="relative mx-auto h-56 w-40 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl sm:mx-0 sm:h-72 sm:w-48">
+          <div className="relative mx-auto h-64 w-44 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl sm:mx-0 sm:h-96 sm:w-64">
             {posterUrl ? (
               <Image src={posterUrl} alt={title} fill className="object-cover" />
             ) : (
@@ -110,12 +110,16 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
               {data.genres.map((genre) => (
                 <span
                   key={genre.id}
-                  className="rounded-full bg-surfaceLight px-3 py-1 text-xs text-gray-200"
+                  className="rounded-full border border-white/25 px-3 py-1 text-xs text-gray-200"
                 >
                   {genre.name}
                 </span>
               ))}
             </div>
+
+            <p className="mx-auto mt-5 max-w-3xl leading-relaxed text-gray-300 sm:mx-0">
+              {data.overview || "Chưa có mô tả cho phim này."}
+            </p>
 
             {trailer && (
               <button
@@ -129,14 +133,6 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
           </div>
         </div>
 
-        {/* Overview */}
-        <section className="mt-10">
-          <h2 className="mb-3 text-lg font-bold text-white sm:text-xl">Nội dung phim</h2>
-          <p className="max-w-3xl leading-relaxed text-gray-300">
-            {data.overview || "Chưa có mô tả cho phim này."}
-          </p>
-        </section>
-
         {/* Cast */}
         <section className="mt-10">
           <h2 className="mb-4 text-lg font-bold text-white sm:text-xl">Diễn viên</h2>
@@ -145,20 +141,18 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
 
         {/* Videos */}
         <section className="mt-10">
-          <h2 className="mb-4 text-lg font-bold text-white sm:text-xl">Video & Trailer</h2>
-          <VideoList videos={data.videos?.results ?? []} title={title} />
+          <VideoList videos={data.videos?.results ?? []} />
         </section>
 
-        {/* Recommendations */}
-        <div className="mt-10 flex flex-col gap-10 pb-16">
+        {/* Phim tương tự */}
+        <div className="mt-10 pb-16">
           <RelatedMediaRow
-            title="Phim đề xuất"
-            items={data.recommendations?.results ?? []}
-            mediaType={mediaType}
-          />
-          <RelatedMediaRow
-            title="Phim liên quan"
-            items={data.similar?.results ?? []}
+            title="Phim tương tự"
+            items={
+              (data.recommendations?.results?.length
+                ? data.recommendations.results
+                : data.similar?.results) ?? []
+            }
             mediaType={mediaType}
           />
         </div>
