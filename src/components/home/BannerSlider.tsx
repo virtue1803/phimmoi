@@ -118,7 +118,7 @@ export default function BannerSlider({ items }: BannerSliderProps) {
       <div
         style={{
           transform: `translateX(${dragOffset}px)`,
-          transition: isDragging.current ? "none" : "transform 0.3s ease-out",
+          transition: isDragging.current ? "none" : "transform 0.1s ease-out",
         }}
         className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 py-14 sm:px-6 lg:flex-row lg:py-24 lg:px-8"
       >
