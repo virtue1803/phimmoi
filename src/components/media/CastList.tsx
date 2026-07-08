@@ -1,0 +1,39 @@
+import { getImageUrl } from "@/lib/tmdb";
+import { CastMember } from "@/types/tmdb";
+import { User } from "lucide-react";
+import Image from "next/image";
+
+interface CastListProps {
+  cast: CastMember[];
+}
+
+export default function CastList({ cast }: CastListProps) {
+  if (cast.length === 0) {
+    return <p className="text-sm text-muted">Chưa có thông tin diễn viên.</p>;
+  }
+
+  const displayedCast = cast.slice(0, 15);
+
+  return (
+    <div className="flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {displayedCast.map((member) => {
+        const photoUrl = getImageUrl(member.profile_path, "w200");
+        return (
+          <div key={member.id} className="w-28 flex-shrink-0 text-center">
+            <div className="relative mx-auto mb-2 aspect-square w-24 overflow-hidden rounded-full bg-surfaceLight">
+              {photoUrl ? (
+                <Image src={photoUrl} alt={member.name} fill className="object-cover" />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-muted">
+                  <User className="h-8 w-8" />
+                </div>
+              )}
+            </div>
+            <p className="line-clamp-1 text-sm font-medium text-white">{member.name}</p>
+            <p className="line-clamp-1 text-xs text-muted">{member.character}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
