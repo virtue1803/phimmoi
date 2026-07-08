@@ -152,7 +152,7 @@ export default function MediaRow({
             {items.map((item) => (
               <div
                 key={item.id}
-                className="w-[calc((100%-16px)/2)] flex-shrink-0 sm:w-[calc((100%-32px)/3)] md:w-[calc((100%-48px)/4)] lg:w-[calc((100%-80px)/6)]"
+                className="w-[calc((100%_-_16px)/2)] flex-shrink-0 sm:w-[calc((100%_-_32px)/3)] md:w-[calc((100%_-_48px)/4)] lg:w-[calc((100%_-_80px)/6)]"
               >
                 <MediaCard item={item} mediaType={mediaType} />
               </div>
