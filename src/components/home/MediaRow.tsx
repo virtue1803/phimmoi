@@ -3,10 +3,10 @@
 import ErrorState from "@/components/common/ErrorState";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import MediaCard from "@/components/media/MediaCard";
+import { useAutoScrollCarousel } from "@/hooks/useAutoScrollCarousel";
 import { MediaBase, MediaType } from "@/types/tmdb";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useRef } from "react";
 
 interface MediaRowProps {
   title: string;
@@ -27,7 +27,8 @@ export default function MediaRow({
   onRetry,
   viewAllHref,
 }: MediaRowProps) {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const hasItems = Boolean(items && items.length > 0);
+  const { scrollRef, dragHandlers } = useAutoScrollCarousel({ enabled: hasItems });
 
   function scrollBy(offset: number) {
     scrollRef.current?.scrollBy({ left: offset, behavior: "smooth" });
@@ -51,7 +52,7 @@ export default function MediaRow({
 
       {isError && !isLoading && <ErrorState onRetry={onRetry} />}
 
-      {!isLoading && !isError && items && items.length > 0 && (
+      {!isLoading && !isError && hasItems && (
         <div className="group/row relative">
           <button
             onClick={() => scrollBy(-600)}
@@ -63,10 +64,14 @@ export default function MediaRow({
 
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            {...dragHandlers}
+            className="flex cursor-grab touch-pan-y select-none gap-4 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {items.map((item) => (
-              <div key={item.id} className="w-[150px] flex-shrink-0 sm:w-[180px]">
+            {items!.map((item) => (
+              <div
+                key={item.id}
+                className="w-[calc((100%_-_1rem)/2)] flex-shrink-0 sm:w-[calc((100%_-_2rem)/3)] md:w-[calc((100%_-_3rem)/4)] lg:w-[calc((100%_-_5rem)/6)]"
+              >
                 <MediaCard item={item} mediaType={mediaType} />
               </div>
             ))}
@@ -82,7 +87,7 @@ export default function MediaRow({
         </div>
       )}
 
-      {!isLoading && !isError && (!items || items.length === 0) && (
+      {!isLoading && !isError && !hasItems && (
         <p className="text-sm text-muted">Chưa có dữ liệu để hiển thị.</p>
       )}
     </section>
