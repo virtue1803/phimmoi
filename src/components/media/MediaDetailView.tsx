@@ -65,10 +65,10 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20">
         {/* Poster + info: tiêu đề ngang hàng với đỉnh ảnh, mô tả tự tràn xuống dưới */}
         <div className="-mt-32 flex flex-col gap-6 sm:-mt-40 sm:flex-row sm:items-start">
-          <div className="relative mx-auto h-64 w-44 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl sm:mx-0 sm:h-96 sm:w-64">
+          <div className="relative  mx-auto h-64 w-44 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl sm:mx-0 sm:h-96 sm:w-64">
             {posterUrl ? (
               <Image src={posterUrl} alt={title} fill className="object-cover" />
             ) : (
@@ -78,7 +78,7 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
             )}
           </div>
 
-          <div className="flex-1 pb-2 text-center sm:pt-2 sm:text-left">
+          <div className="relative flex-1 pb-2 text-center sm:pt-2 sm:text-left">
             <h1 className="text-2xl font-extrabold text-white sm:text-4xl">{title}</h1>
             {data.tagline && (
               <p className="mt-1 italic text-muted">{data.tagline}</p>
