@@ -8,7 +8,7 @@ import { getTitle } from "@/utils/format";
 import { PlayCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 
 interface BannerSliderProps {
   items: MediaBase[];
@@ -28,13 +28,19 @@ export default function BannerSlider({ items }: BannerSliderProps) {
     Boolean(active)
   );
 
+  // Kéo chuột để chuyển slide trái/phải
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
   useEffect(() => {
-    if (slides.length <= 1) return;
+    if (slides.length <= 1 || isPaused) return;
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % slides.length);
     }, AUTO_PLAY_INTERVAL);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [slides.length, isPaused]);
 
   if (!active) return null;
 
@@ -53,8 +59,46 @@ export default function BannerSlider({ items }: BannerSliderProps) {
     }
   }
 
+  function handleMouseDown(e: ReactMouseEvent<HTMLDivElement>) {
+    isDragging.current = true;
+    dragStartX.current = e.pageX;
+    setIsPaused(true);
+  }
+
+  function handleMouseMove(e: ReactMouseEvent<HTMLDivElement>) {
+    if (!isDragging.current) return;
+    setDragOffset(e.pageX - dragStartX.current);
+  }
+
+  function handleMouseLeave() {
+    isDragging.current = false;
+    setDragOffset(0);
+    setIsPaused(false);
+  }
+
+  function endDrag() {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+
+    const threshold = 80;
+    if (dragOffset <= -threshold) {
+      goTo(activeIndex + 1);
+    } else if (dragOffset >= threshold) {
+      goTo(activeIndex - 1);
+    }
+    setDragOffset(0);
+    setIsPaused(false);
+  }
+
   return (
-    <section className="relative w-full overflow-hidden bg-background">
+    <section
+      className="relative w-full cursor-grab select-none overflow-hidden bg-background active:cursor-grabbing"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={endDrag}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsPaused(true)}
+    >
       {backdropUrl && (
         <div className="absolute inset-0">
           <Image
@@ -63,6 +107,7 @@ export default function BannerSlider({ items }: BannerSliderProps) {
             alt={title}
             fill
             priority
+            draggable={false}
             className="animate-fade-in object-cover object-top opacity-40"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/40" />
@@ -70,8 +115,13 @@ export default function BannerSlider({ items }: BannerSliderProps) {
         </div>
       )}
 
-      <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 py-14 sm:px-6 lg:flex-row lg:py-24 lg:px-8">
-        {/* Text bên trái */}
+      <div
+        style={{
+          transform: `translateX(${dragOffset}px)`,
+          transition: isDragging.current ? "none" : "transform 0.3s ease-out",
+        }}
+        className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 py-14 sm:px-6 lg:flex-row lg:py-24 lg:px-8"
+      >
         <div className="w-full text-center lg:w-3/5 lg:text-left">
           <h1 className="text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-6xl">
             {title}
