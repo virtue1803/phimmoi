@@ -4,7 +4,6 @@ import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { useInfiniteMedia } from "@/hooks/useInfiniteMedia";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { MediaType } from "@/types/tmdb";
 import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -38,15 +37,6 @@ export default function MediaListPage({ mediaType, title }: MediaListPageProps) 
     refetch,
   } = useInfiniteMedia({ mediaType, query: queryFromUrl });
 
-  const sentinelRef = useIntersectionObserver({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
-    },
-    enabled: Boolean(hasNextPage),
-  });
-
   function handleSearchSubmit(e: FormEvent) {
     e.preventDefault();
     const trimmed = searchInput.trim();
@@ -62,13 +52,10 @@ export default function MediaListPage({ mediaType, title }: MediaListPageProps) 
   const items = data?.pages.flatMap((page) => page.results) ?? [];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 pb-16 pt-28 sm:px-6 lg:px-8">
       <h1 className="text-center text-2xl font-bold text-white sm:text-3xl">{title}</h1>
 
-      <form
-        onSubmit={handleSearchSubmit}
-        className="mx-auto mt-8 flex w-full max-w-md items-center gap-2"
-      >
+      <form onSubmit={handleSearchSubmit} className="mt-8 flex w-full max-w-md items-center gap-2">
         <input
           type="text"
           value={searchInput}
@@ -109,17 +96,21 @@ export default function MediaListPage({ mediaType, title }: MediaListPageProps) 
           <>
             <MediaGrid items={items} mediaType={mediaType} />
 
-            <div ref={sentinelRef} className="h-10 w-full" />
-
-            {isFetchingNextPage && (
-              <div className="flex items-center justify-center gap-2 py-8 text-muted">
-                <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                <span className="text-sm">Đang tải thêm...</span>
+            {hasNextPage && (
+              <div className="mt-10 flex justify-center">
+                <button
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                  className="flex items-center gap-2 rounded-full border border-white/60 bg-transparent px-8 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-background disabled:opacity-60"
+                >
+                  {isFetchingNextPage && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {isFetchingNextPage ? "Đang tải..." : "Xem thêm"}
+                </button>
               </div>
             )}
 
             {!hasNextPage && (
-              <p className="py-8 text-center text-sm text-muted">
+              <p className="mt-10 text-center text-sm text-muted">
                 Đã hiển thị tất cả kết quả.
               </p>
             )}
