@@ -16,20 +16,22 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Header trong suốt khi ở đầu trang, chuyển sang màu đen khi cuộn xuống
+  // Đổi nền header khi người dùng cuộn xuống
   useEffect(() => {
     function handleScroll() {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 8);
     }
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const isSolid = scrolled || open;
+
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled || open ? "bg-black/95 backdrop-blur-sm shadow-lg shadow-black/30" : "bg-transparent"
+      className={`sticky top-0 z-50 transition-colors duration-300 ${
+        isSolid ? "bg-black/95 backdrop-blur-sm shadow-md" : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -48,8 +50,8 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium text-white/90 transition hover:text-white ${
-                  isActive ? "border-b-2 border-white pb-1 text-white" : ""
+                className={`text-sm font-medium text-white transition hover:text-primary ${
+                  isActive ? "border-b-2 border-white pb-1" : ""
                 }`}
               >
                 {link.label}
@@ -75,7 +77,7 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="text-sm font-medium text-white/90 hover:text-white"
+                className="text-sm font-medium text-white hover:text-primary"
               >
                 {link.label}
               </Link>

@@ -68,7 +68,7 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         {/* Poster + info */}
         <div className="-mt-32 flex flex-col gap-6 sm:-mt-40 sm:flex-row sm:items-end">
           <div className="relative mx-auto h-56 w-40 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl sm:mx-0 sm:h-72 sm:w-48">
