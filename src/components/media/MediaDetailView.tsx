@@ -6,17 +6,11 @@ import { useTrailerModal } from "@/context/TrailerModalContext";
 import { useMediaDetail } from "@/hooks/useMediaDetail";
 import { pickBestTrailer } from "@/hooks/useVideos";
 import { getImageUrl } from "@/lib/tmdb";
-import { MediaType, MovieDetail, TVDetail } from "@/types/tmdb";
-import {
-  formatFullDate,
-  formatRuntime,
-  getReleaseDate,
-  getTitle,
-} from "@/utils/format";
-import { Calendar, Clock, PlayCircle, Star } from "lucide-react";
+import { MediaType } from "@/types/tmdb";
+import { getTitle } from "@/utils/format";
+import { PlayCircle } from "lucide-react";
 import Image from "next/image";
 import CastList from "./CastList";
-import RatingBadge from "./RatingBadge";
 import RelatedMediaRow from "./RelatedMediaRow";
 import VideoList from "./VideoList";
 
@@ -47,10 +41,6 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
   const title = getTitle(data);
   const backdropUrl = getImageUrl(data.backdrop_path, "original");
   const posterUrl = getImageUrl(data.poster_path, "w500");
-  const runtime =
-    mediaType === "movie"
-      ? (data as MovieDetail).runtime
-      : (data as TVDetail).episode_run_time?.[0];
 
   const trailer = pickBestTrailer(data.videos?.results);
 
@@ -60,17 +50,24 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
 
   return (
     <div>
-      {/* Hero backdrop */}
+      {/* Hero backdrop - cùng phong cách với banner trang chủ */}
       <div className="relative h-[45vh] min-h-[320px] w-full sm:h-[55vh]">
         {backdropUrl && (
-          <Image src={backdropUrl} alt={title} fill priority className="object-cover object-top" />
+          <Image
+            src={backdropUrl}
+            alt={title}
+            fill
+            priority
+            className="object-cover object-top opacity-40"
+          />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
-        {/* Poster + info */}
-        <div className="-mt-32 flex flex-col gap-6 sm:-mt-40 sm:flex-row sm:items-end">
+        {/* Poster + info: tiêu đề ngang hàng với đỉnh ảnh, mô tả tự tràn xuống dưới */}
+        <div className="-mt-32 flex flex-col gap-6 sm:-mt-40 sm:flex-row sm:items-start">
           <div className="relative mx-auto h-64 w-44 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl sm:mx-0 sm:h-96 sm:w-64">
             {posterUrl ? (
               <Image src={posterUrl} alt={title} fill className="object-cover" />
@@ -81,30 +78,11 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
             )}
           </div>
 
-          <div className="flex-1 pb-2 text-center sm:text-left">
+          <div className="flex-1 pb-2 text-center sm:pt-2 sm:text-left">
             <h1 className="text-2xl font-extrabold text-white sm:text-4xl">{title}</h1>
             {data.tagline && (
               <p className="mt-1 italic text-muted">{data.tagline}</p>
             )}
-
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
-              <RatingBadge vote={data.vote_average} size="md" />
-
-              <div className="flex items-center gap-1 text-sm text-gray-200">
-                <Calendar className="h-4 w-4 text-muted" />
-                {formatFullDate(getReleaseDate(data))}
-              </div>
-
-              <div className="flex items-center gap-1 text-sm text-gray-200">
-                <Clock className="h-4 w-4 text-muted" />
-                {formatRuntime(runtime)}
-              </div>
-
-              <div className="flex items-center gap-1 text-sm text-gray-200">
-                <Star className="h-4 w-4 text-yellow-400" />
-                {data.vote_count.toLocaleString("vi-VN")} lượt đánh giá
-              </div>
-            </div>
 
             <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
               {data.genres.map((genre) => (
