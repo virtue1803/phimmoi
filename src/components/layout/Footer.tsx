@@ -110,6 +110,170 @@ export default function Footer() {
   );
 }
 
+// "use client";
+
+// import Link from "next/link";
+// import { useEffect, useState } from "react";
+// import { getTopRated, getImageUrl } from "@/lib/tmdb"; 
+
+// const FOOTER_COLUMNS = [
+//   {
+//     heading: null,
+//     links: ["Home", "Contact us", "Term of services", "About us"],
+//   },
+//   {
+//     heading: null,
+//     links: ["Live", "FAQ", "Premium"],
+//   },
+//   {
+//     heading: null,
+//     links: ["You must watch", "Recent release", "Top IMDB", "Privacy policy"],
+//   },
+// ];
+
+// export default function Footer() {
+//   const [marqueePosters, setMarqueePosters] = useState<string[]>([]);
+
+//   useEffect(() => {
+//     async function fetchFooterPosters() {
+//       try {
+//         const data = await getTopRated("tv", 1);
+        
+//         if (data && data.results) {
+//           // Lấy và lọc các URL ảnh hợp lệ
+//           const validPosters = data.results
+//             .map((item) => getImageUrl(item.poster_path, "w200"))
+//             .filter((url) => url !== null) as string[];
+
+//           // Nhân đôi mảng ảnh để tạo hiệu ứng vòng lặp vô tận (seamless loop)
+//           // 20 ảnh thật x 2 = 40 ảnh lặp lại, đủ dài để cuộn mượt mà
+//           setMarqueePosters([...validPosters, ...validPosters]);
+//         }
+//       } catch (error) {
+//         console.error("Lỗi khi tải ảnh nền Footer:", error);
+//       }
+//     }
+
+//     fetchFooterPosters();
+//   }, []);
+
+//   return (
+//     <footer className="relative mt-16 overflow-hidden border-t border-white/10 bg-black">
+      
+//       {/* --- ĐỊNH NGHĨA CSS ANIMATION --- */}
+//       <style dangerouslySetInnerHTML={{
+//         __html: `
+//           @keyframes scroll-left {
+//             0% { transform: translateX(0); }
+//             100% { transform: translateX(-50%); } 
+//           }
+//           @keyframes scroll-right {
+//             0% { transform: translateX(-50%); }
+//             100% { transform: translateX(0); }
+//           }
+//           .animate-scroll-left {
+//             animation: scroll-left 60s linear infinite;
+//           }
+//           .animate-scroll-right {
+//             animation: scroll-right 60s linear infinite;
+//           }
+//         `
+//       }} />
+
+//       {/* --- PHẦN BACKGROUND POSTER ANIMATION TỪ API --- */}
+//       <div className="absolute inset-0 z-0 flex flex-col gap-2 opacity-40 rotate-[-4deg] scale-110 top-[-20%]">
+        
+//         {marqueePosters.length > 0 ? (
+//           <>
+//             {/* Hàng 1: Cuộn qua trái */}
+//             <div className="flex w-max animate-scroll-left gap-2">
+//               {marqueePosters.map((src, idx) => (
+//                 <div key={`r1-${idx}`} className="h-[200px] w-[135px] flex-shrink-0 overflow-hidden rounded-md opacity-70 bg-surfaceLight">
+//                   {/* eslint-disable-next-line @next/next/no-img-element */}
+//                   <img src={src} alt="poster" className="h-full w-full object-cover" loading="lazy" />
+//                 </div>
+//               ))}
+//             </div>
+
+//             {/* Hàng 2: Cuộn qua phải */}
+//             <div className="flex w-max animate-scroll-right gap-2">
+//               {marqueePosters.map((src, idx) => (
+//                 <div key={`r2-${idx}`} className="h-[200px] w-[135px] flex-shrink-0 overflow-hidden rounded-md opacity-70 bg-surfaceLight">
+//                   {/* eslint-disable-next-line @next/next/no-img-element */}
+//                   <img src={src} alt="poster" className="h-full w-full object-cover" loading="lazy" />
+//                 </div>
+//               ))}
+//             </div>
+
+//             {/* Hàng 3: Cuộn qua trái */}
+//             <div className="flex w-max animate-scroll-left gap-2">
+//               {marqueePosters.map((src, idx) => (
+//                 <div key={`r3-${idx}`} className="h-[200px] w-[135px] flex-shrink-0 overflow-hidden rounded-md opacity-70 bg-surfaceLight">
+//                   {/* eslint-disable-next-line @next/next/no-img-element */}
+//                   <img src={src} alt="poster" className="h-full w-full object-cover" loading="lazy" />
+//                 </div>
+//               ))}
+//             </div>
+//           </>
+//         ) : (
+//           <div className="h-full w-full bg-surface" />
+//         )}
+//       </div>
+
+//       {/* Lớp phủ (Overlay) để làm tối background, giúp chữ Footer nổi bật lên */}
+//       <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/90 to-black/10 backdrop-blur-[1px]" />
+
+//       {/* --- NỘI DUNG FOOTER CHÍNH --- */}
+//       <div className="relative z-20 mx-auto flex max-w-4xl flex-col items-center gap-8 px-4 py-14 text-center sm:px-6">
+//         <div className="flex items-center gap-2">
+//           <Link href="/" className="flex items-center gap-2 group">
+            
+//             {/* LOGO NÚT PLAY */}
+//             <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-500 transition-transform group-hover:scale-110">
+//               <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-green-500">
+//                 <svg className="ml-[2px] h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+//                   <path d="M8 5v14l11-7z" />
+//                 </svg>
+//               </div>
+//             </div>
+
+//             <span className="text-2xl font-bold tracking-tight text-white transition hover:text-green-500">
+//               the<span className="font-extrabold">Movies</span>
+//             </span>
+//           </Link>
+//         </div>
+
+//         <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-3">
+//           {FOOTER_COLUMNS.map((column, idx) => (
+//             <ul key={idx} className="flex flex-col gap-2">
+//               {column.links.map((link) => (
+//                 <li key={link}>
+//                   <span className="cursor-pointer text-sm text-gray-400 transition hover:text-white">
+//                     {link}
+//                   </span>
+//                 </li>
+//               ))}
+//             </ul>
+//           ))}
+//         </div>
+
+//         <p className="text-xs text-gray-500 mt-4">
+//           © {new Date().getFullYear()} theMovies. Dữ liệu phim được cung cấp bởi{" "}
+//           <a
+//             href="https://www.themoviedb.org/"
+//             target="_blank"
+//             rel="noopener noreferrer"
+//             className="text-green-500 hover:underline"
+//           >
+//             TMDB
+//           </a>
+//         </p>
+//       </div>
+//     </footer>
+//   );
+// }
+
+
 // 
 // "use client";
 
