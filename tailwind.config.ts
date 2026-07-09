@@ -7,6 +7,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      maxWidth: {
+        "8xl": "1440px",
+        "9xl": "1800px",
+      },
       colors: {
         background: "#0b0c10",
         surface: "#15171c",
