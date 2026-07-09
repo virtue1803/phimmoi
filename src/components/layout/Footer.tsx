@@ -1,3 +1,4 @@
+import Link from "next/link";
 const FOOTER_COLUMNS = [
   {
     heading: null,
@@ -18,10 +19,21 @@ export default function Footer() {
     <footer className="relative mt-16 overflow-hidden border-t border-white/5 bg-surface">
       <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center gap-8 px-4 py-14 text-center sm:px-6">
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded-full bg-accent" />
-          <span className="text-lg font-bold text-white">
+          <Link href="/" className="flex items-center gap-2">
+          {/* LOGO NÚT PLAY THEO YÊU CẦU */}
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-500">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-green-500">
+              {/* SVG Hình tam giác (Play) - ml-[2px] để tam giác trông cân đối ở giữa tâm tròn */}
+              <svg className="ml-[2px] h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+
+          <span className="text-2xl font-bold tracking-tight text-white">
             the<span className="font-extrabold">Movies</span>
           </span>
+        </Link>
         </div>
 
         <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-3">
