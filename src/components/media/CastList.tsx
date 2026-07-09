@@ -12,7 +12,7 @@ export default function CastList({ cast }: CastListProps) {
     return <p className="text-sm text-muted">Chưa có thông tin diễn viên.</p>;
   }
 
-  const displayedCast = cast.slice(0, 15);
+  const displayedCast = cast.slice(0, 5);
 
   return (
     <div className="flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
