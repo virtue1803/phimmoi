@@ -110,8 +110,8 @@ export default function BannerSlider({ items }: BannerSliderProps) {
             draggable={false}
             className="animate-fade-in object-cover object-top opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
+          {/* <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" /> */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
         </div>
       )}
 

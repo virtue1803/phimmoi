@@ -64,7 +64,7 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
           />
         )}
         {/* Gradient nhẹ nhàng hơn: Phủ trái mờ dần sang phải, dưới mờ dần lên trên */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" /> */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       </div>
 
