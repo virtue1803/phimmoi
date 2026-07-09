@@ -30,7 +30,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <span className="text-2xl font-bold tracking-tight text-white">
+          <span className="text-2xl font-bold tracking-tight text-white transition hover:text-red-500">
             the<span className="font-extrabold">Movies</span>
           </span>
         </Link>

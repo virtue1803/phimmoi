@@ -51,7 +51,7 @@ export default function Header() {
             </div>
           </div>
 
-          <span className="text-2xl font-bold tracking-tight text-white">
+          <span className="text-2xl font-bold tracking-tight text-white transition hover:text-red-500">
             the<span className="font-extrabold">Movies</span>
           </span>
         </Link>
@@ -65,7 +65,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-xl font-medium text-white transition hover:text-green-500 ${
+                className={`text-xl font-medium text-white transition hover:text-red-500 ${
                   isActive ? "border-b-2 border-white pb-1" : ""
                 }`}
               >
