@@ -107,7 +107,7 @@ export default function MediaRow({
 
   return (
     <section
-      className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"
+      className="mx-auto max-w-8xl px-4 py-6 sm:px-6 lg:px-8"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => {
         endDrag();

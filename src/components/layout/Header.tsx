@@ -34,7 +34,7 @@ export default function Header() {
         isSolid ? "bg-black/95 backdrop-blur-sm shadow-md" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-8xl items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-accent" />
           <span className="text-lg font-bold tracking-tight text-white">

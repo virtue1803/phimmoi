@@ -41,7 +41,6 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
   const title = getTitle(data);
   const backdropUrl = getImageUrl(data.backdrop_path, "original");
   const posterUrl = getImageUrl(data.poster_path, "w500");
-
   const trailer = pickBestTrailer(data.videos?.results);
 
   function handleWatchTrailer() {
@@ -49,26 +48,34 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
   }
 
   return (
-    <div>
-      {/* Hero backdrop - cùng phong cách với banner trang chủ */}
-      <div className="relative h-[45vh] min-h-[320px] w-full sm:h-[55vh]">
+    <div className="relative w-full min-h-screen">
+      {/* 1. Hero backdrop - Đặt absolute để nằm lót dưới cùng, không chiếm không gian thực.
+        Phủ từ trên cùng xuống h-[60vh] hoặc 70vh tùy ý. 
+      */}
+      <div className="absolute top-0 left-0 right-0 h-[60vh] sm:h-[75vh] w-full z-0 pointer-events-none">
         {backdropUrl && (
           <Image
             src={backdropUrl}
             alt={title}
             fill
             priority
-            className="object-cover object-top opacity-40"
+            // Tăng opacity lên 70 để ảnh sáng và rõ hơn
+            className="object-cover object-top opacity-70"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
+        {/* Gradient nhẹ nhàng hơn: Phủ trái mờ dần sang phải, dưới mờ dần lên trên */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20">
-        {/* Poster + info: tiêu đề ngang hàng với đỉnh ảnh, mô tả tự tràn xuống dưới */}
-        <div className="-mt-32 flex flex-col gap-6 sm:-mt-40 sm:flex-row sm:items-start">
-          <div className="relative  mx-auto h-64 w-44 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl sm:mx-0 sm:h-96 sm:w-64">
+      {/* 2. Content Container - Đẩy sát lên gần header bằng pt-24 (tùy chiều cao navbar của bạn) 
+        Dùng z-10 để luôn nổi lên trên background.
+      */}
+      <div className="relative z-10 mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28">
+        
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+          {/* Poster - Làm to ra một chút để cân đối với background giống trong ảnh */}
+          <div className="relative mx-auto h-72 w-48 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:mx-0 sm:h-[420px] sm:w-[280px]">
             {posterUrl ? (
               <Image src={posterUrl} alt={title} fill className="object-cover" />
             ) : (
@@ -78,31 +85,31 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
             )}
           </div>
 
-          <div className="relative flex-1 pb-2 text-center sm:pt-2 sm:text-left">
-            <h1 className="text-2xl font-extrabold text-white sm:text-4xl">{title}</h1>
-            {data.tagline && (
-              <p className="mt-1 italic text-muted">{data.tagline}</p>
-            )}
-
+          {/* Info - Header text to hơn */}
+          <div className="relative flex-1 pb-2 text-center sm:pt-4 sm:text-left">
+            <h1 className="text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl drop-shadow-lg">
+              {title}
+            </h1>
+            
             <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
               {data.genres.map((genre) => (
                 <span
                   key={genre.id}
-                  className="rounded-full border border-white/25 px-3 py-1 text-xs text-gray-200"
+                  className="rounded-full border border-white/30 bg-black/40 px-3 py-1 text-xs text-gray-200 backdrop-blur-sm"
                 >
                   {genre.name}
                 </span>
               ))}
             </div>
 
-            <p className="mx-auto mt-5 max-w-3xl leading-relaxed text-gray-300 sm:mx-0">
+            <p className="mx-auto mt-6 max-w-3xl leading-relaxed text-gray-200 sm:mx-0 text-sm sm:text-base drop-shadow-md">
               {data.overview || "Chưa có mô tả cho phim này."}
             </p>
 
             {trailer && (
               <button
                 onClick={handleWatchTrailer}
-                className="mt-5 flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primaryDark"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-bold text-black transition hover:bg-gray-200"
               >
                 <PlayCircle className="h-5 w-5" />
                 Xem trailer
@@ -111,8 +118,8 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
           </div>
         </div>
 
-        {/* Cast */}
-        <section className="mt-10">
+        {/* Cast - Dựa theo ảnh, phần CastList có thể bám ngay sát phần Info */}
+        <section className="mt-12 sm:mt-16">
           <h2 className="mb-4 text-lg font-bold text-white sm:text-xl">Diễn viên</h2>
           <CastList cast={data.credits?.cast ?? []} />
         </section>

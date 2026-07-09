@@ -120,7 +120,7 @@ export default function BannerSlider({ items }: BannerSliderProps) {
           transform: `translateX(${dragOffset}px)`,
           transition: isDragging.current ? "none" : "transform 0.1s ease-out",
         }}
-        className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 py-14 sm:px-6 lg:flex-row lg:py-24 lg:px-8"
+        className="relative z-10 mx-auto flex max-w-8xl flex-col items-center gap-8 px-4 py-14 sm:px-6 lg:flex-row lg:py-24 lg:px-8"
       >
         <div className="w-full text-center lg:w-3/5 lg:text-left">
           <h1 className="text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-6xl">

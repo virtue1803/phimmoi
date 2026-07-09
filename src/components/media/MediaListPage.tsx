@@ -52,7 +52,7 @@ export default function MediaListPage({ mediaType, title }: MediaListPageProps) 
   const items = data?.pages.flatMap((page) => page.results) ?? [];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-8xl px-4 py-10 sm:px-6 lg:px-8">
       <h1 className="text-center text-2xl font-bold text-white sm:text-3xl">{title}</h1>
 
       <form
