@@ -14,7 +14,7 @@ interface BannerSliderProps {
   items: MediaBase[];
 }
 
-const AUTO_PLAY_INTERVAL = 7000;
+const AUTO_PLAY_INTERVAL = 3200;
 
 export default function BannerSlider({ items }: BannerSliderProps) {
   const [activeIndex, setActiveIndex] = useState(0);
