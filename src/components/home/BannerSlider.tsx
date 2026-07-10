@@ -153,7 +153,7 @@ export default function BannerSlider({ items }: BannerSliderProps) {
         {/* Poster nổi bên phải */}
         <div className="hidden w-full justify-center lg:flex lg:w-2/5">
           {posterUrl && (
-            <div className="relative aspect-[2/3] w-56 rotate-2 overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10 transition duration-500 hover:rotate-0 xl:w-64">
+            <div className="relative aspect-[2/3] w-56 rotate-2 overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10 transition duration-500 hover:rotate-0 xl:w-96">
               <Image src={posterUrl} alt={title} fill className="object-cover" />
             </div>
           )}
