@@ -38,17 +38,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 interface UseInfiniteMediaParams {
   mediaType: MediaType;
   query?: string;
-  genre?: string; // 1. Thêm tham số genre
+  genre?: string; 
 }
 
 export function useInfiniteMedia({ mediaType, query, genre }: UseInfiniteMediaParams) {
   const trimmedQuery = query?.trim() ?? "";
 
   return useInfiniteQuery({
-    // 2. Thêm genre vào queryKey để React Query biết khi nào cần fetch lại data mới
     queryKey: ["media-list", mediaType, trimmedQuery, genre],
     queryFn: ({ pageParam }) => {
-      // 3. Xử lý logic gọi API
       if (trimmedQuery) {
         return searchMedia(mediaType, trimmedQuery, pageParam);
       }

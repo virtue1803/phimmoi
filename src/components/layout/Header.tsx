@@ -15,7 +15,7 @@ export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
-  // Đổi nền header khi người dùng cuộn xuống
+
   useEffect(() => {
     function handleScroll() {
       setScrolled(window.scrollY > 8);
@@ -33,7 +33,7 @@ export default function Header() {
 
   return (
     <>
-      {/* Header trên cùng - chỉ hiển thị từ md trở lên */}
+
       <header
         className={`fixed top-0 hidden w-full z-50 justify-center px-4 sm:px-8 transition-all duration-300 ease-in-out md:flex ${
           isSolid
@@ -75,7 +75,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Thanh nav dính đáy màn hình - chỉ hiển thị dưới md */}
       <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-white/10 bg-black/95 py-2 backdrop-blur-sm md:hidden">
         {NAV_LINKS.map((link) => {
           const isActive = isActiveLink(link.href);

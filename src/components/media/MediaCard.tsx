@@ -33,7 +33,7 @@ export default function MediaCard({ item, mediaType }: MediaCardProps) {
           </div>
         )}
 
-        {/* 2. THÊM LỚP PHỦ VÀ NÚT PLAY Ở ĐÂY */}
+
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/40">
           <div className="flex h-12 w-20 scale-75 items-center justify-center rounded-2xl bg-[#FF0000] opacity-0 shadow-[0_0_30px_rgba(255,0,0,0.8)] transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
             {/* Thêm ml-1 để tam giác cân đối hơn ở giữa */}
@@ -43,7 +43,7 @@ export default function MediaCard({ item, mediaType }: MediaCardProps) {
       </div>
 
       <div>
-        {/* 3. Tối ưu thêm transition-colors cho tiêu đề */}
+
         <h3 className="line-clamp-1 text-sm font-semibold text-white transition-colors duration-200 group-hover:text-primary">
           {title}
         </h3>

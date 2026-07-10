@@ -294,7 +294,7 @@ export default function BannerSlider({ items }: BannerSliderProps) {
         </div>
       )}
 
-      {/* THÊM KEY VÀO ĐÂY ĐỂ RESET ANIMATION KHI CHUYỂN SLIDE */}
+
       <div
         key={`content-${active.id}`}
         style={{
@@ -312,7 +312,7 @@ export default function BannerSlider({ items }: BannerSliderProps) {
             {title}
           </h1>
 
-          {/* OVERVIEW: 600ms ease-in-out (Tăng 300ms) */}
+
           <p
             style={{ animation: "fadeSlideDown 600ms ease-in-out both" }}
             className="mx-auto mt-5 line-clamp-4 max-w-xl text-sm text-gray-300 sm:text-base lg:mx-0"
@@ -320,7 +320,7 @@ export default function BannerSlider({ items }: BannerSliderProps) {
             {active.overview || "Chưa có mô tả cho phim này."}
           </p>
 
-          {/* BUTTONS: 900ms ease-in-out (Tăng thêm 300ms) */}
+
           <div
             style={{ animation: "fadeSlideDown 900ms ease-in-out both" }}
             className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
@@ -346,9 +346,6 @@ export default function BannerSlider({ items }: BannerSliderProps) {
         {/* Poster nổi bên phải */}
         <div className="hidden w-full justify-center lg:flex lg:w-2/5 ">
           {posterUrl && (
-            /* POSTER: animate-scale 300ms 
-               Bọc thêm thẻ div bên ngoài để chạy animation nhằm tránh làm 
-               mất/xung đột với class rotate-2 của Tailwind ở div bên trong. */
             <div style={{ animation: "scaleIn 300ms ease-in-out both" }}>
               <div className="relative aspect-[2/3] w-56 rotate-2 overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10 transition duration-500 hover:rotate-0 xl:w-96">
                 <Image src={posterUrl} alt={title} fill className="object-cover" />

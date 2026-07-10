@@ -49,9 +49,7 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
 
   return (
     <div className="relative w-full min-h-screen">
-      {/* 1. Hero backdrop - Đặt absolute để nằm lót dưới cùng, không chiếm không gian thực.
-        Phủ từ trên cùng xuống h-[60vh] hoặc 70vh tùy ý. 
-      */}
+      
       <div className="absolute top-0 left-0 right-0 h-[60vh] sm:h-[75vh] w-full z-0 pointer-events-none">
         {backdropUrl && (
           <Image
@@ -63,18 +61,16 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
             className="object-cover object-top opacity-70"
           />
         )}
-        {/* Gradient nhẹ nhàng hơn: Phủ trái mờ dần sang phải, dưới mờ dần lên trên */}
+      
         {/* <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" /> */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       </div>
 
-      {/* 2. Content Container - Đẩy sát lên gần header bằng pt-24 (tùy chiều cao navbar của bạn) 
-        Dùng z-10 để luôn nổi lên trên background.
-      */}
+      
       <div className="relative z-10 mx-auto max-w-9xl px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28">
         
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
-          {/* Poster - Làm to ra một chút để cân đối với background giống trong ảnh */}
+          {/* Poster */}
           <div className="relative mx-auto h-72 w-48 flex-shrink-0 overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 sm:mx-0 sm:h-[420px] sm:w-[280px]">
             {posterUrl ? (
               <Image src={posterUrl} alt={title} fill className="object-cover" />
@@ -85,7 +81,7 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
             )}
           </div>
 
-          {/* Info - Header text to hơn */}
+          {/* Info - Header */}
           <div className="relative flex-1 pb-2 text-center sm:pt-4 sm:text-left">
             <h1 className="text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl drop-shadow-lg">
               {title}

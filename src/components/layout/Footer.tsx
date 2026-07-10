@@ -23,17 +23,13 @@ export default function Footer() {
   useEffect(() => {
     async function fetchFooterPosters() {
       try {
-        // Lấy danh sách Top Rated TV Shows (bạn có thể đổi thành phim tùy ý)
         const data = await getTopRated("tv", 1);
         
         if (data && data.results) {
-          // 1. Lấy ra poster_path và chuyển thành URL đầy đủ (dùng w200 cho nhẹ)
           const validPosters = data.results
             .map((item) => getImageUrl(item.poster_path, "w200"))
-            .filter((url) => url !== null) as string[]; // Lọc bỏ các phim bị thiếu ảnh
+            .filter((url) => url !== null) as string[]; 
 
-          // 2. Nhân bản mảng ảnh lên nhiều lần để lấp đầy 48 ô grid
-          // Nếu API trả về 20 ảnh, nhân 3 lần thành 60 ảnh, sau đó cắt lấy đúng 48 ảnh đầu tiên
           const filledPosters = Array(3)
             .fill(validPosters)
             .flat()
@@ -51,8 +47,6 @@ export default function Footer() {
 
   return (
     <footer className="relative mt-16 overflow-hidden bg-black py-16">
-      
-      {/* --- BACKGROUND POSTER TỪ API --- */}
       <div className="absolute inset-0 z-0 grid grid-cols-4 gap-0 opacity-30 sm:grid-cols-8 md:grid-cols-12 lg:grid-cols-16">
         {backgroundPosters.length > 0 ? (
           backgroundPosters.map((src, idx) => (
@@ -67,15 +61,12 @@ export default function Footer() {
             </div>
           ))
         ) : (
-          // Khối div trống hiển thị tạm thời trong lúc chờ API tải xong
           <div className="col-span-full h-full w-full bg-surface" />
         )}
       </div>
 
-      {/* Lớp phủ (Overlay) che mờ */}
       <div className="absolute inset-0 z-10 bg-black/50" />
 
-      {/* --- NỘI DUNG FOOTER CHÍNH --- */}
       <div className="relative z-20 mx-auto flex max-w-5xl flex-col items-center gap-12 px-4 sm:px-6">
         
         <Link href="/" className="group flex items-center gap-2">

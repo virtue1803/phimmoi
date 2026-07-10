@@ -52,7 +52,7 @@ export default function RelatedMediaRow({
     isDown.current = true;
     if (!containerRef.current) return;
     
-    // Tắt scroll-smooth khi đang kéo để chuột di chuyển không bị delay
+    
     containerRef.current.style.scrollBehavior = "auto";
     startX.current = e.pageX - containerRef.current.offsetLeft;
     scrollLeft.current = containerRef.current.scrollLeft;
@@ -61,16 +61,16 @@ export default function RelatedMediaRow({
   const handleMouseLeaveOrUp = () => {
     isDown.current = false;
     if (containerRef.current) {
-      // Bật lại smooth scroll cho hiệu ứng tự động cuộn
+      
       containerRef.current.style.scrollBehavior = "smooth";
     }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDown.current || !containerRef.current) return;
-    e.preventDefault(); // Ngăn hành vi bôi đen text/ảnh mặc định
+    e.preventDefault(); 
     const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX.current) * 1.5; // Nhân 1.5 để kéo nhanh hơn một chút
+    const walk = (x - startX.current) * 1.5; 
     containerRef.current.scrollLeft = scrollLeft.current - walk;
   };
 
@@ -97,8 +97,6 @@ export default function RelatedMediaRow({
             key={`${item.id}-${index}`}
             className="w-[150px] flex-shrink-0 sm:w-[180px]"
           >
-            {/* Chú ý: Bên trong MediaCard nếu có thẻ <img />, bạn nên thêm draggable={false} 
-                để khi kéo chuột không bị dính cái bóng ảnh mặc định của trình duyệt nhé */}
             <MediaCard item={item} mediaType={mediaType} />
           </div>
         ))}

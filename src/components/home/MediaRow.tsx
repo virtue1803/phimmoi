@@ -18,7 +18,6 @@ interface MediaRowProps {
   viewAllHref?: string;
 }
 
-// Khoảng thời gian (ms) giữa mỗi lần tự động trượt sang thẻ tiếp theo
 const AUTO_SCROLL_INTERVAL = 3500;
 
 export default function MediaRow({
@@ -37,7 +36,7 @@ export default function MediaRow({
   const dragStartScrollLeft = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  /** Chiều rộng của 1 thẻ + khoảng cách (gap) giữa các thẻ */
+
   function getCardStep(): number {
     const track = scrollRef.current;
     if (!track) return 0;
@@ -51,7 +50,7 @@ export default function MediaRow({
     scrollRef.current?.scrollBy({ left: getCardStep() * cards, behavior: "smooth" });
   }
 
-  // Tự động trượt slide từ phải sang trái, quay lại đầu khi đến cuối
+
   useEffect(() => {
     if (!items || items.length === 0 || isPaused) return;
 
@@ -70,7 +69,7 @@ export default function MediaRow({
     return () => clearInterval(timer);
   }, [items, isPaused]);
 
-  // Kéo chuột để cuộn ngang (drag to scroll)
+
   function handleMouseDown(e: ReactMouseEvent<HTMLDivElement>) {
     const track = scrollRef.current;
     if (!track) return;
@@ -96,7 +95,7 @@ export default function MediaRow({
     setIsPaused(false);
   }
 
-  // Chặn click mở trang phim ngay sau khi vừa kéo chuột
+
   function handleClickCapture(e: ReactMouseEvent<HTMLDivElement>) {
     if (hasDragged.current) {
       e.preventDefault();
