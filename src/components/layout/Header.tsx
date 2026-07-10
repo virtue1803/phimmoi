@@ -38,7 +38,7 @@ export default function Header() {
       }`}
     >
       {/* Container giới hạn độ rộng max-w */}
-      <div className="flex w-full max-w-7xl items-center gap-4">
+      <div className="flex w-full max-w-8xl px-5 items-center gap-4">
         
         <Link href="/" className="flex items-center gap-2">
           {/* LOGO NÚT PLAY THEO YÊU CẦU */}
