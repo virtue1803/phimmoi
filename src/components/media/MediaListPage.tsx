@@ -222,7 +222,7 @@ export default function MediaListPage({ mediaType, title }: MediaListPageProps) 
       <h1 className="text-center text-2xl font-bold text-white sm:text-3xl">{title}</h1>
 
       {/* Thanh công cụ: Search + Lọc */}
-      <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:justify-center">
+      <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:justify-start">
         {/* Form tìm kiếm */}
         <form onSubmit={handleSearchSubmit} className="flex w-full max-w-md items-center gap-2">
           <input
