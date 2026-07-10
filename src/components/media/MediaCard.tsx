@@ -1,7 +1,7 @@
 import { getImageUrl } from "@/lib/tmdb";
 import { MediaBase, MediaType } from "@/types/tmdb";
 import { getReleaseDate, getTitle, formatYear, getMediaPath } from "@/utils/format";
-import { Film } from "lucide-react";
+import { Film, Play } from "lucide-react"; // 1. Import thêm icon Play
 import Image from "next/image";
 import Link from "next/link";
 
@@ -32,10 +32,19 @@ export default function MediaCard({ item, mediaType }: MediaCardProps) {
             <span className="text-xs">Không có ảnh</span>
           </div>
         )}
+
+        {/* 2. THÊM LỚP PHỦ VÀ NÚT PLAY Ở ĐÂY */}
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/40">
+          <div className="flex h-12 w-20 scale-75 items-center justify-center rounded-2xl bg-[#FF0000] opacity-0 shadow-[0_0_30px_rgba(255,0,0,0.8)] transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
+            {/* Thêm ml-1 để tam giác cân đối hơn ở giữa */}
+            <Play className="ml-1 h-6 w-6 fill-white text-white" />
+          </div>
+        </div>
       </div>
 
       <div>
-        <h3 className="line-clamp-1 text-sm font-semibold text-white group-hover:text-primary">
+        {/* 3. Tối ưu thêm transition-colors cho tiêu đề */}
+        <h3 className="line-clamp-1 text-sm font-semibold text-white transition-colors duration-200 group-hover:text-primary">
           {title}
         </h3>
         <span className="text-xs text-muted">{year}</span>
