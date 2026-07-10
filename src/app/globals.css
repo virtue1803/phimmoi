@@ -21,3 +21,26 @@ body {
 }
 
 /* line-clamp fallback (Tailwind v3.3+ đã hỗ trợ sẵn line-clamp-*) */
+/* Hiệu ứng trượt từ TRÊN xuống DƯỚI */
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px); /* -20px để phần tử bắt đầu từ phía trên */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* Trượt xuống vị trí cố định */
+  }
+}
+
+/* (Vẫn giữ nguyên hiệu ứng scaleIn cho Poster như cũ) */
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
