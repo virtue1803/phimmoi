@@ -51,7 +51,7 @@ export default function Header() {
               </div>
             </div>
 
-            <span className="text-2xl font-bold tracking-tight text-white transition hover:text-red-500">
+            <span className="text-3xl font-bold tracking-tight text-white transition hover:text-red-500">
               the<span className="font-extrabold">Movies</span>
             </span>
           </Link>
