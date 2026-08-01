@@ -7,8 +7,8 @@ import {
   VideosResponse,
 } from "@/types/tmdb";
 
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+/** Gọi qua route proxy phía server để không lộ API key ra trình duyệt */
+const TMDB_PROXY_URL = "/api/tmdb";
 
 export const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
 
@@ -30,27 +30,38 @@ class TmdbError extends Error {
   }
 }
 
+/** Chỉ chấp nhận id dạng số của TMDB, tránh chèn ký tự lạ vào đường dẫn */
+function assertValidId(id: string | number): string {
+  const value = String(id);
+  if (!/^\d{1,12}$/.test(value)) {
+    throw new TmdbError(`Id không hợp lệ: ${value}`, 400);
+  }
+  return value;
+}
+
+function assertValidMediaType(mediaType: MediaType): MediaType {
+  if (mediaType !== "movie" && mediaType !== "tv") {
+    throw new TmdbError(`Loại nội dung không hợp lệ: ${mediaType}`, 400);
+  }
+  return mediaType;
+}
+
 async function tmdbFetch<T>(
   endpoint: string,
   params: Record<string, string | number | undefined> = {}
 ): Promise<T> {
-  if (!API_KEY) {
-    throw new TmdbError(
-      "Thiếu NEXT_PUBLIC_TMDB_API_KEY. Vui lòng khai báo trong file .env.local"
-    );
-  }
-
-  const url = new URL(`${TMDB_BASE_URL}${endpoint}`);
-  url.searchParams.set("api_key", API_KEY);
-  url.searchParams.set("language", "vi-VN");
+  const search = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== "") {
-      url.searchParams.set(key, String(value));
+      search.set(key, String(value));
     }
   });
 
-  const res = await fetch(url.toString());
+  const queryString = search.toString();
+  const res = await fetch(
+    `${TMDB_PROXY_URL}${endpoint}${queryString ? `?${queryString}` : ""}`
+  );
 
   if (!res.ok) {
     throw new TmdbError(`Lỗi khi gọi TMDB API: ${res.statusText}`, res.status);
@@ -62,15 +73,24 @@ async function tmdbFetch<T>(
 /* ---------------------------- Danh sách phim ---------------------------- */
 
 export function getTrending(mediaType: MediaType, page = 1) {
-  return tmdbFetch<MediaListResponse>(`/trending/${mediaType}/week`, { page });
+  return tmdbFetch<MediaListResponse>(
+    `/trending/${assertValidMediaType(mediaType)}/week`,
+    { page }
+  );
 }
 
 export function getTopRated(mediaType: MediaType, page = 1) {
-  return tmdbFetch<MediaListResponse>(`/${mediaType}/top_rated`, { page });
+  return tmdbFetch<MediaListResponse>(
+    `/${assertValidMediaType(mediaType)}/top_rated`,
+    { page }
+  );
 }
 
 export function getPopular(mediaType: MediaType, page = 1) {
-  return tmdbFetch<MediaListResponse>(`/${mediaType}/popular`, { page });
+  return tmdbFetch<MediaListResponse>(
+    `/${assertValidMediaType(mediaType)}/popular`,
+    { page }
+  );
 }
 
 // export function discoverMedia(mediaType: MediaType, page = 1) {
@@ -81,7 +101,7 @@ export function getPopular(mediaType: MediaType, page = 1) {
 // }
 
 export function discoverMedia(mediaType: MediaType, page = 1, genreId?: string) {
-  return tmdbFetch<MediaListResponse>(`/discover/${mediaType}`, {
+  return tmdbFetch<MediaListResponse>(`/discover/${assertValidMediaType(mediaType)}`, {
     page,
     sort_by: "popularity.desc",
     with_genres: genreId,
@@ -89,7 +109,7 @@ export function discoverMedia(mediaType: MediaType, page = 1, genreId?: string) 
 }
 
 export function searchMedia(mediaType: MediaType, query: string, page = 1) {
-  return tmdbFetch<MediaListResponse>(`/search/${mediaType}`, {
+  return tmdbFetch<MediaListResponse>(`/search/${assertValidMediaType(mediaType)}`, {
     query,
     page,
   });
@@ -98,15 +118,22 @@ export function searchMedia(mediaType: MediaType, query: string, page = 1) {
 /* ------------------------------ Chi tiết -------------------------------- */
 
 export function getMediaDetail(mediaType: MediaType, id: string | number) {
-  return tmdbFetch<MovieDetail | TVDetail>(`/${mediaType}/${id}`, {
-    append_to_response: "credits,videos,similar,recommendations",
-  });
+  return tmdbFetch<MovieDetail | TVDetail>(
+    `/${assertValidMediaType(mediaType)}/${assertValidId(id)}`,
+    {
+      append_to_response: "credits,videos,similar,recommendations",
+    }
+  );
 }
 
 export function getCredits(mediaType: MediaType, id: string | number) {
-  return tmdbFetch<CreditsResponse>(`/${mediaType}/${id}/credits`);
+  return tmdbFetch<CreditsResponse>(
+    `/${assertValidMediaType(mediaType)}/${assertValidId(id)}/credits`
+  );
 }
 
 export function getVideos(mediaType: MediaType, id: string | number) {
-  return tmdbFetch<VideosResponse>(`/${mediaType}/${id}/videos`);
+  return tmdbFetch<VideosResponse>(
+    `/${assertValidMediaType(mediaType)}/${assertValidId(id)}/videos`
+  );
 }
