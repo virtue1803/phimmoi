@@ -21,12 +21,22 @@ export function getImageUrl(
   return `${IMAGE_BASE_URL}/${size}${path}`;
 }
 
-class TmdbError extends Error {
+export class TmdbError extends Error {
   status?: number;
-  constructor(message: string, status?: number) {
-    super(message);
+  constructor(message: string, status?: number, options?: { cause?: unknown }) {
+    super(message, options);
     this.name = "TmdbError";
     this.status = status;
+  }
+}
+
+/** Đọc `status_message` trong body lỗi của TMDB (nếu có) để báo lỗi rõ ràng hơn */
+async function readErrorMessage(res: Response): Promise<string | null> {
+  try {
+    const body = (await res.json()) as { status_message?: unknown };
+    return typeof body.status_message === "string" ? body.status_message : null;
+  } catch {
+    return null;
   }
 }
 
@@ -50,13 +60,30 @@ async function tmdbFetch<T>(
     }
   });
 
-  const res = await fetch(url.toString());
-
-  if (!res.ok) {
-    throw new TmdbError(`Lỗi khi gọi TMDB API: ${res.statusText}`, res.status);
+  let res: Response;
+  try {
+    res = await fetch(url.toString());
+  } catch (cause) {
+    throw new TmdbError(
+      "Không thể kết nối tới TMDB API. Vui lòng kiểm tra kết nối mạng và thử lại.",
+      undefined,
+      { cause }
+    );
   }
 
-  return res.json() as Promise<T>;
+  if (!res.ok) {
+    const detail = (await readErrorMessage(res)) ?? res.statusText;
+    throw new TmdbError(
+      `Lỗi khi gọi TMDB API (${res.status})${detail ? `: ${detail}` : ""}`,
+      res.status
+    );
+  }
+
+  try {
+    return (await res.json()) as T;
+  } catch (cause) {
+    throw new TmdbError("Dữ liệu trả về từ TMDB API không hợp lệ.", res.status, { cause });
+  }
 }
 
 /* ---------------------------- Danh sách phim ---------------------------- */

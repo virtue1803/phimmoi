@@ -5,7 +5,7 @@ import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { useTrailerModal } from "@/context/TrailerModalContext";
 import { useMediaDetail } from "@/hooks/useMediaDetail";
 import { pickBestTrailer } from "@/hooks/useVideos";
-import { getImageUrl } from "@/lib/tmdb";
+import { TmdbError, getImageUrl } from "@/lib/tmdb";
 import { MediaType } from "@/types/tmdb";
 import { getTitle } from "@/utils/format";
 import { PlayCircle } from "lucide-react";
@@ -28,12 +28,16 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
   }
 
   if (isError || !data) {
+    const isNotFound = error instanceof TmdbError && error.status === 404;
+    const message = isNotFound
+      ? "Không tìm thấy phim này trên TMDB."
+      : error instanceof Error
+        ? error.message
+        : "Không thể tải thông tin phim.";
+
     return (
       <div className="mx-auto max-w-3xl px-4 py-16">
-        <ErrorState
-          message={error instanceof Error ? error.message : "Không thể tải thông tin phim."}
-          onRetry={() => refetch()}
-        />
+        <ErrorState message={message} onRetry={isNotFound ? undefined : () => refetch()} />
       </div>
     );
   }
