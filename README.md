@@ -38,7 +38,8 @@ src/
     common/                 # LoadingSpinner, ErrorState, EmptyState
   context/                  # TrailerModalContext (quản lý modal trailer toàn cục)
   hooks/                    # useHomeData, useInfiniteMedia, useMediaDetail, useVideos...
-  lib/tmdb.ts               # Client gọi TMDB API
+  app/api/tmdb/[...path]/route.ts  # Proxy TMDB phía server (giữ API key bí mật)
+  lib/tmdb.ts               # Client gọi TMDB API qua proxy
   types/tmdb.ts             # Type định nghĩa dữ liệu TMDB
   utils/format.ts           # Helper format ngày, thời lượng, điểm số...
 ```
@@ -64,8 +65,11 @@ cp .env.local.example .env.local
 4. Mở `.env.local` và dán API key vào:
 
 ```
-NEXT_PUBLIC_TMDB_API_KEY=your_tmdb_v3_api_key_here
+TMDB_API_KEY=<api key của bạn>
 ```
+
+> API key chỉ được dùng ở phía server trong route `/api/tmdb`. Không đặt tiền tố `NEXT_PUBLIC_`
+> vì biến đó sẽ bị nhúng vào bundle và lộ ra trình duyệt.
 
 ### 3. Chạy dự án
 
@@ -81,3 +85,5 @@ Mở http://localhost:3000 để xem kết quả.
 - **Tìm kiếm**: từ khóa được lưu trên URL (`?q=...`) làm nguồn dữ liệu (source of truth) cho cả ô search trên Header lẫn ô search trong trang danh sách, đảm bảo đồng bộ và có thể chia sẻ link tìm kiếm.
 - **Modal trailer** dùng chung một `TrailerModalContext` ở root layout, có thể mở từ Banner, từ danh sách video trong trang chi tiết.
 - Toàn bộ ảnh dùng `next/image` với domain `image.tmdb.org` được khai báo trong `next.config.js`.
+- **Bảo mật**: mọi request TMDB đi qua route handler `/api/tmdb/[...path]` với danh sách endpoint và
+  query param được allowlist; app còn gắn CSP và các security header trong `next.config.js`.
