@@ -215,6 +215,10 @@ export default function MediaListPage({ mediaType, title }: MediaListPageProps) 
   }
 
   const items = data?.pages.flatMap((page) => page.results) ?? [];
+  // Lỗi khi tải trang tiếp theo không được xóa sạch danh sách đã tải được
+  const hasFatalError = isError && items.length === 0;
+  const hasNextPageError = isError && items.length > 0;
+  const errorMessage = error instanceof Error ? error.message : undefined;
   const genres = mediaType === "movie" ? MOVIE_GENRES : TV_GENRES;
 
   return (
@@ -258,11 +262,8 @@ export default function MediaListPage({ mediaType, title }: MediaListPageProps) 
       <div className="mt-10">
         {isLoading && <LoadingSpinner fullScreen label={`Đang tải ${title.toLowerCase()}...`} />}
 
-        {isError && !isLoading && (
-          <ErrorState
-            message={error instanceof Error ? error.message : undefined}
-            onRetry={() => refetch()}
-          />
+        {hasFatalError && !isLoading && (
+          <ErrorState message={errorMessage} onRetry={() => refetch()} />
         )}
 
         {!isLoading && !isError && items.length === 0 && (
@@ -272,19 +273,28 @@ export default function MediaListPage({ mediaType, title }: MediaListPageProps) 
           />
         )}
 
-        {!isLoading && !isError && items.length > 0 && (
+        {!isLoading && items.length > 0 && (
           <>
             <MediaGrid items={items} mediaType={mediaType} />
 
-            <div className="mt-8 flex justify-center">
-              {hasNextPage ? (
+            <div className="mt-8 flex flex-col items-center gap-3">
+              {hasNextPageError && (
+                <p className="text-center text-sm text-primary">
+                  {errorMessage ?? "Không tải được thêm kết quả. Vui lòng thử lại."}
+                </p>
+              )}
+              {hasNextPage || hasNextPageError ? (
                 <button
                   onClick={() => fetchNextPage()}
                   disabled={isFetchingNextPage}
                   className="flex items-center gap-2 rounded-full border border-white bg-transparent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isFetchingNextPage && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {isFetchingNextPage ? "Đang tải..." : "Xem thêm"}
+                  {isFetchingNextPage
+                    ? "Đang tải..."
+                    : hasNextPageError
+                      ? "Thử lại"
+                      : "Xem thêm"}
                 </button>
               ) : (
                 <p className="py-2 text-center text-sm text-muted">

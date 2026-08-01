@@ -202,11 +202,11 @@ export default function BannerSlider({ items }: BannerSliderProps) {
   const active = slides[activeIndex];
 
   const { openTrailer } = useTrailerModal();
-  const { data: videos, isLoading: isVideoLoading } = useVideos(
-    "movie",
-    active?.id,
-    Boolean(active)
-  );
+  const {
+    data: videos,
+    isLoading: isVideoLoading,
+    isError: isVideoError,
+  } = useVideos("movie", active?.id, Boolean(active));
 
   // Kéo chuột để chuyển slide trái/phải
   const isDragging = useRef(false);
@@ -232,8 +232,16 @@ export default function BannerSlider({ items }: BannerSliderProps) {
     setActiveIndex((index + slides.length) % slides.length);
   }
 
+  const trailer = pickBestTrailer(videos?.results);
+  const trailerLabel = isVideoLoading
+    ? "Đang tải..."
+    : isVideoError
+      ? "Không tải được trailer"
+      : trailer
+        ? "Watch trailer"
+        : "Chưa có trailer";
+
   function handleWatchTrailer() {
-    const trailer = pickBestTrailer(videos?.results);
     if (trailer) {
       openTrailer(trailer.key, title);
     }
@@ -334,11 +342,11 @@ export default function BannerSlider({ items }: BannerSliderProps) {
 
             <button
               onClick={handleWatchTrailer}
-              disabled={isVideoLoading}
-              className="flex items-center gap-2 rounded-full border border-white/40 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-background disabled:opacity-60"
+              disabled={!trailer}
+              className="flex items-center gap-2 rounded-full border border-white/40 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-background disabled:cursor-not-allowed disabled:opacity-60"
             >
               <PlayCircle className="h-4 w-4" />
-              {isVideoLoading ? "Đang tải..." : "Watch trailer"}
+              {trailerLabel}
             </button>
           </div>
         </div>

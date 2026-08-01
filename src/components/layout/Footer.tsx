@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-// Import các hàm bạn vừa cung cấp từ file api của bạn (điều chỉnh lại đường dẫn cho đúng)
-import { getTopRated, getImageUrl } from "@/lib/tmdb"; 
+import { useTopRated } from "@/hooks/useHomeData";
+import { getImageUrl } from "@/lib/tmdb";
 
 const FOOTER_COLUMNS = [
   {
@@ -18,32 +17,18 @@ const FOOTER_COLUMNS = [
 ];
 
 export default function Footer() {
-  const [backgroundPosters, setBackgroundPosters] = useState<string[]>([]);
+  // Ảnh nền chỉ mang tính trang trí: lỗi được TanStack Query giữ lại và báo qua
+  // handler chung trong Providers thay vì bị nuốt trong khối catch.
+  const { data } = useTopRated("tv");
 
-  useEffect(() => {
-    async function fetchFooterPosters() {
-      try {
-        const data = await getTopRated("tv", 1);
-        
-        if (data && data.results) {
-          const validPosters = data.results
-            .map((item) => getImageUrl(item.poster_path, "w200"))
-            .filter((url) => url !== null) as string[]; 
+  const validPosters =
+    data?.results
+      .map((item) => getImageUrl(item.poster_path, "w200"))
+      .filter((url): url is string => url !== null) ?? [];
 
-          const filledPosters = Array(3)
-            .fill(validPosters)
-            .flat()
-            .slice(0, 48);
-
-          setBackgroundPosters(filledPosters);
-        }
-      } catch (error) {
-        console.error("Lỗi khi tải ảnh nền Footer:", error);
-      }
-    }
-
-    fetchFooterPosters();
-  }, []);
+  const backgroundPosters = validPosters.length
+    ? Array<string[]>(3).fill(validPosters).flat().slice(0, 48)
+    : [];
 
   return (
     <footer className="relative mt-16 overflow-hidden bg-black py-16">
