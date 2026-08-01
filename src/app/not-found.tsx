@@ -1,3 +1,4 @@
+import { PRIMARY_BUTTON } from "@/utils/styles";
 import { Film } from "lucide-react";
 import Link from "next/link";
 
@@ -12,7 +13,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="mt-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-primaryDark"
+        className={`mt-2 ${PRIMARY_BUTTON}`}
       >
         Về trang chủ
       </Link>

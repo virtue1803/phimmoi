@@ -1,5 +1,6 @@
 import { getImageUrl } from "@/lib/tmdb";
 import { CastMember } from "@/types/tmdb";
+import { HIDE_SCROLLBAR } from "@/utils/styles";
 import { User } from "lucide-react";
 import Image from "next/image";
 
@@ -15,7 +16,7 @@ export default function CastList({ cast }: CastListProps) {
   const displayedCast = cast.slice(0, 5);
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className={`flex gap-4 overflow-x-auto pb-2 ${HIDE_SCROLLBAR}`}>
       {displayedCast.map((member) => {
         const photoUrl = getImageUrl(member.profile_path, "w200");
         return (

@@ -2,12 +2,12 @@
 
 import ErrorState from "@/components/common/ErrorState";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { useTrailerModal } from "@/context/TrailerModalContext";
 import { useMediaDetail } from "@/hooks/useMediaDetail";
-import { pickBestTrailer } from "@/hooks/useVideos";
+import { useTrailerLauncher } from "@/hooks/useVideos";
 import { getImageUrl } from "@/lib/tmdb";
 import { MediaType } from "@/types/tmdb";
 import { getTitle } from "@/utils/format";
+import { SECTION_HEADING } from "@/utils/styles";
 import { PlayCircle } from "lucide-react";
 import Image from "next/image";
 import CastList from "./CastList";
@@ -21,7 +21,8 @@ interface MediaDetailViewProps {
 
 export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps) {
   const { data, isLoading, isError, error, refetch } = useMediaDetail(mediaType, id);
-  const { openTrailer } = useTrailerModal();
+  const title = data ? getTitle(data) : "";
+  const { trailer, playTrailer } = useTrailerLauncher(data?.videos?.results, title);
 
   if (isLoading) {
     return <LoadingSpinner fullScreen label="Đang tải thông tin phim..." />;
@@ -38,14 +39,8 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
     );
   }
 
-  const title = getTitle(data);
   const backdropUrl = getImageUrl(data.backdrop_path, "original");
   const posterUrl = getImageUrl(data.poster_path, "w500");
-  const trailer = pickBestTrailer(data.videos?.results);
-
-  function handleWatchTrailer() {
-    if (trailer) openTrailer(trailer.key, title);
-  }
 
   return (
     <div className="relative w-full min-h-screen">
@@ -104,7 +99,7 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
 
             {trailer && (
               <button
-                onClick={handleWatchTrailer}
+                onClick={playTrailer}
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-bold text-black transition hover:bg-gray-200"
               >
                 <PlayCircle className="h-5 w-5" />
@@ -116,7 +111,7 @@ export default function MediaDetailView({ mediaType, id }: MediaDetailViewProps)
 
         {/* Cast - Dựa theo ảnh, phần CastList có thể bám ngay sát phần Info */}
         <section className="mt-12 sm:mt-16">
-          <h2 className="mb-4 text-lg font-bold text-white sm:text-xl">Diễn viên</h2>
+          <h2 className={`mb-4 ${SECTION_HEADING}`}>Diễn viên</h2>
           <CastList cast={data.credits?.cast ?? []} />
         </section>
 

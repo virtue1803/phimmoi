@@ -3,10 +3,11 @@
 import ErrorState from "@/components/common/ErrorState";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import MediaCard from "@/components/media/MediaCard";
+import { useCarousel } from "@/hooks/useCarousel";
 import { MediaBase, MediaType } from "@/types/tmdb";
+import { DRAGGABLE_TRACK, SECTION_HEADING } from "@/utils/styles";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from "react";
 
 interface MediaRowProps {
   title: string;
@@ -29,92 +30,19 @@ export default function MediaRow({
   onRetry,
   viewAllHref,
 }: MediaRowProps) {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const isDragging = useRef(false);
-  const hasDragged = useRef(false);
-  const dragStartX = useRef(0);
-  const dragStartScrollLeft = useRef(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-
-  function getCardStep(): number {
-    const track = scrollRef.current;
-    if (!track) return 0;
-    const firstCard = track.firstElementChild as HTMLElement | null;
-    if (!firstCard) return 0;
-    const gap = parseFloat(getComputedStyle(track).columnGap || "16");
-    return firstCard.offsetWidth + gap;
-  }
-
-  function scrollByCards(cards: number) {
-    scrollRef.current?.scrollBy({ left: getCardStep() * cards, behavior: "smooth" });
-  }
-
-
-  useEffect(() => {
-    if (!items || items.length === 0 || isPaused) return;
-
-    const timer = setInterval(() => {
-      const track = scrollRef.current;
-      if (!track) return;
-
-      const maxScrollLeft = track.scrollWidth - track.clientWidth;
-      if (track.scrollLeft >= maxScrollLeft - 2) {
-        track.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        track.scrollBy({ left: getCardStep(), behavior: "smooth" });
-      }
-    }, AUTO_SCROLL_INTERVAL);
-
-    return () => clearInterval(timer);
-  }, [items, isPaused]);
-
-
-  function handleMouseDown(e: ReactMouseEvent<HTMLDivElement>) {
-    const track = scrollRef.current;
-    if (!track) return;
-    isDragging.current = true;
-    hasDragged.current = false;
-    dragStartX.current = e.pageX;
-    dragStartScrollLeft.current = track.scrollLeft;
-    setIsPaused(true);
-  }
-
-  function handleMouseMove(e: ReactMouseEvent<HTMLDivElement>) {
-    if (!isDragging.current) return;
-    const track = scrollRef.current;
-    if (!track) return;
-    e.preventDefault();
-    const delta = e.pageX - dragStartX.current;
-    if (Math.abs(delta) > 5) hasDragged.current = true;
-    track.scrollLeft = dragStartScrollLeft.current - delta;
-  }
-
-  function endDrag() {
-    isDragging.current = false;
-    setIsPaused(false);
-  }
-
-
-  function handleClickCapture(e: ReactMouseEvent<HTMLDivElement>) {
-    if (hasDragged.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      hasDragged.current = false;
-    }
-  }
+  const { scrollRef, scrollByCards, dragHandlers, pause, resume } = useCarousel({
+    autoScrollInterval: AUTO_SCROLL_INTERVAL,
+    enabled: Boolean(items && items.length > 0),
+  });
 
   return (
     <section
       className="mx-auto max-w-8xl px-4 py-6 sm:px-6 lg:px-8"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => {
-        endDrag();
-        setIsPaused(false);
-      }}
+      onMouseEnter={pause}
+      onMouseLeave={resume}
     >
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-white sm:text-xl">{title}</h2>
+        <h2 className={SECTION_HEADING}>{title}</h2>
         {viewAllHref && (
           <Link
             href={viewAllHref}
@@ -139,15 +67,7 @@ export default function MediaRow({
             <ChevronRight className="h-5 w-5 rotate-180" />
           </button>
 
-          <div
-            ref={scrollRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={endDrag}
-            onMouseLeave={endDrag}
-            onClickCapture={handleClickCapture}
-            className="flex cursor-grab select-none gap-4 overflow-x-auto scroll-smooth pb-2 active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
+          <div ref={scrollRef} {...dragHandlers} className={`${DRAGGABLE_TRACK} scroll-smooth`}>
             {items.map((item) => (
               <div
                 key={item.id}

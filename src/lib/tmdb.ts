@@ -73,13 +73,6 @@ export function getPopular(mediaType: MediaType, page = 1) {
   return tmdbFetch<MediaListResponse>(`/${mediaType}/popular`, { page });
 }
 
-// export function discoverMedia(mediaType: MediaType, page = 1) {
-//   return tmdbFetch<MediaListResponse>(`/discover/${mediaType}`, {
-//     page,
-//     sort_by: "popularity.desc",
-//   });
-// }
-
 export function discoverMedia(mediaType: MediaType, page = 1, genreId?: string) {
   return tmdbFetch<MediaListResponse>(`/discover/${mediaType}`, {
     page,

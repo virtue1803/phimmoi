@@ -1,3 +1,4 @@
+import { STATE_PANEL } from "@/utils/styles";
 import { AlertTriangle, RefreshCcw } from "lucide-react";
 
 interface ErrorStateProps {
@@ -10,7 +11,7 @@ export default function ErrorState({
   onRetry,
 }: ErrorStateProps) {
   return (
-    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 rounded-xl bg-surface px-6 py-10 text-center">
+    <div className={STATE_PANEL}>
       <AlertTriangle className="h-10 w-10 text-primary" />
       <p className="max-w-md text-sm text-muted">{message}</p>
       {onRetry && (

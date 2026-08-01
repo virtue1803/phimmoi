@@ -1,5 +1,6 @@
 "use client";
 
+import YouTubeEmbed from "@/components/common/YouTubeEmbed";
 import { X } from "lucide-react";
 import { useEffect } from "react";
 
@@ -45,13 +46,7 @@ export default function TrailerModal({ videoKey, title, onClose }: TrailerModalP
         </button>
 
         <div className="aspect-video w-full">
-          <iframe
-            className="h-full w-full"
-            src={`https://www.youtube.com/embed/${videoKey}?autoplay=1`}
-            title={title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          <YouTubeEmbed videoKey={videoKey} title={title} autoplay />
         </div>
       </div>
     </div>
