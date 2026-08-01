@@ -1,5 +1,6 @@
 "use client";
 
+import BrandLogo from "@/components/common/BrandLogo";
 import { Home, Clapperboard, Tv } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -42,19 +43,7 @@ export default function Header() {
         }`}
       >
         <div className="flex w-full max-w-8xl px-5 items-center gap-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-500">
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-green-500">
-                <svg className="ml-[2px] h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-            </div>
-
-            <span className="text-3xl font-bold tracking-tight text-white transition hover:text-red-500">
-              the<span className="font-extrabold">Movies</span>
-            </span>
-          </Link>
+          <BrandLogo />
 
           <nav className="ml-auto flex items-center gap-8">
             {NAV_LINKS.map((link) => {

@@ -1,3 +1,4 @@
+import YouTubeEmbed from "@/components/common/YouTubeEmbed";
 import { VideoItem } from "@/types/tmdb";
 
 interface VideoListProps {
@@ -17,13 +18,7 @@ export default function VideoList({ videos }: VideoListProps) {
         <div key={video.id}>
           <h3 className="mb-3 text-base font-semibold text-white">{video.name}</h3>
           <div className="aspect-video w-full overflow-hidden rounded-lg bg-surfaceLight">
-            <iframe
-              className="h-full w-full"
-              src={`https://www.youtube.com/embed/${video.key}`}
-              title={video.name}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <YouTubeEmbed videoKey={video.key} title={video.name} />
           </div>
         </div>
       ))}
